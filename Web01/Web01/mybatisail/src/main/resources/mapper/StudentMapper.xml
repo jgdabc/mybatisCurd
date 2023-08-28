@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.StudentMapper">
+    <insert id="insertInto">
+        insert into student (name, email, age)
+        values (#{name}, #{email}, #{age})
+    </insert>
+    <insert id="insertIntoDynamicCondition">
+
+    </insert>
+    <insert id="insertIntoBatch">
+        insert into student(name, email, age)
+        values
+        <foreach collection="list" item="student" separator=",">
+        (
+         #{student.name},
+         #{student.email},
+         #{student.age}
+            )
+</foreach>
+    </insert>
+    <!--    使用动态set标签去掉多余逗号-->
+    <update id="update">
+        update student
+        <set>
+
+            <if test="name!=null and name!=''">
+                name = #{name},
+            </if>
+            <if test="email!=null and email!=''">
+                email = #{email},
+            </if>
+            <if test="age!=null and age !=''">
+                age = #{age}
+
+            </if>
+        </set>
+        where id = #{id}
+
+
+    </update>
+    <delete id="delete">
+        delete
+        from student
+        where id = #{id}
+    </delete>
+    <delete id="deleteById">
+        delete
+        from student
+        where id = #{id}
+    </delete>
+    <delete id="deleteByName">
+        delete
+        from student
+        where name = #{name}
+    </delete>
+    <delete id="deleteByNames">
+        delete from student where name in
+        <foreach collection="names" item="name" separator="," open="(" close=")">
+            #{name}
+        </foreach>
+
+
+    </delete>
+
+    <select id="selectAll" resultType="Student">
+        select *
+        from student
+    </select>
+    <select id="selectById" resultType="Student">
+        select *
+        from student
+        where id = #{id}
+    </select>
+    <select id="selectByCondition" resultType="Student">
+        select *
+        from student
+        where name = #{name}
+          and email = #{email}
+          and age = #{age}
+
+
+    </select>
+    <select id="selectByDynamicCondition" resultType="entity.Student">
+        select * from student
+        <where>
+            <if test="name!=null and name!=''">
+                name = #{name}
+            </if>
+            <if test="emai!=null and email!=''">
+                and email = #{email}
+            </if>
+            <if test="age!=null and age!=''">
+                and age = #{age}
+            </if>
+        </where>
+    </select>
+
+</mapper>
